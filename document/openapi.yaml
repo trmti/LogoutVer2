@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: LogOut JSON Server
-  description: This is a LogOut JSON Server
+  description: this is Logout server
   contact:
     name: API Support
     email: trmtikko@gmail.com
@@ -10,5 +10,10 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.1
 servers:
-  - url: https://trmti--og-ut.deno.dev
-    description: jsonServer
+  - url: https://logout-ver2-trmti.vercel.app
+    description: this is logout server
+paths:
+  /mintNFT:
+    $ref: './paths/mintNFT/index.yaml'
+  /mintToken:
+    $ref: './paths/mintToken/index.yaml'

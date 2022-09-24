@@ -43,7 +43,25 @@ export default async function handler(
         if (tx.status === 1) {
           res.status(200).json({ message: 'mint success!' });
         } else {
-          res.status(400).json({ message: 'mint failed' });
+          let err_count = 0;
+          const { error } = await supabase
+            .from('personaldatas')
+            .delete()
+            .eq('address', useraddress);
+          if (error) {
+            while (err_count < 5) {
+              const { error } = await supabase
+                .from('personaldatas')
+                .delete()
+                .eq('address', useraddress);
+              if (!error) {
+                break;
+              }
+            }
+          }
+          res
+            .status(401)
+            .json({ message: 'mint transaction failed. please try again.' });
         }
       }
     }

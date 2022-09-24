@@ -1,0 +1,20 @@
+post:
+  description: NFTをmintする
+  summary: mint NFT
+  operationId: mintNFT
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './schemas.yaml#/reqParam'
+  responses:
+    200:
+      description: mint success
+      content:
+        application/json:
+          schema:
+            $ref: './schemas.yaml#/resParam'
+    400:
+      description: sender is not NFT owner
+    500:
+      description: Internal Server Error

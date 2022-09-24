@@ -1,0 +1,15 @@
+reqParam:
+  type: object
+  properties:
+    toAddress:
+      type: string
+      pattern: '^0x[0-9|a-f|A-F]{40}'
+    NFTMetaid:
+      type: integer
+      description: NFTのメタデータID(IPFS上にあります)
+
+resParam:
+  type: object
+  properties:
+    NFTid:
+      type: integer

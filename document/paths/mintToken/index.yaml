@@ -1,0 +1,18 @@
+post:
+  description: Tokenをmintする
+  summary: mint Token
+  operationId: mintToken
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './schemas.yaml#/reqParam'
+  responses:
+    200:
+      description: mint success!
+    400:
+      description: You already minted token today.
+    401:
+      description: mint transaction failed. Please try again.
+    500:
+      description: Internal Server Error

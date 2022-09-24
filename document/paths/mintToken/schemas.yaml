@@ -1,0 +1,9 @@
+reqParam:
+  type: object
+  properties:
+    NFTid:
+      type: integer
+      description: コントラクトに記述されたNFTのid
+    duration:
+      type: integer
+      description: 睡眠時間 (分)
