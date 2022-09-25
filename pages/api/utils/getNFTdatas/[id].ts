@@ -23,7 +23,7 @@ export default async function handler(
         res.status(200).json({ results });
         return;
       } else {
-        res.status(400).json({ message: 'failed' });
+        res.status(400).json({ message: 'NFT is not exists' });
         return;
       }
     }

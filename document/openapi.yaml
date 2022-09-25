@@ -10,7 +10,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.1
 servers:
-  - url: https://logout-ver2-trmti.vercel.app
+  - url: https://logout-theta.vercel.app/
     description: this is logout server
 paths:
   /mintNFT:
