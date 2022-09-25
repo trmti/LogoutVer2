@@ -1,0 +1,19 @@
+get:
+  description: NFTに関する情報を取得する。
+  summary: get nft datas
+  operationId: getNFTdatas
+  responses:
+    200:
+      description: get NFT data successfully.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas.yaml#/resParams'
+
+parameters:
+  - name: NFTid
+    in: path
+    description: ID of NFT
+    required: true
+    schema:
+      type: integer

@@ -10,10 +10,12 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.1
 servers:
-  - url: https://logout-theta.vercel.app/
+  - url: https://logout-theta.vercel.app/api/
     description: this is logout server
 paths:
   /mintNFT:
     $ref: './paths/mintNFT/index.yaml'
   /mintToken:
     $ref: './paths/mintToken/index.yaml'
+  /utils/getNFTdatas/${NFTid}:
+    $ref: './paths/utils/getNFTdatas/index.yaml'
