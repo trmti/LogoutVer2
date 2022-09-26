@@ -1,0 +1,4 @@
+resParams:
+  type: array
+  items:
+    type: integer

@@ -1,0 +1,20 @@
+get:
+  description: 直近一週間の睡眠時間を、記録日の降順(リストの先頭が一番新しい要素)で取得。
+  summary: get weekly sleeps
+  operationId: getWeeklySleeps
+  responses:
+    200:
+      description: get sleeps successfully.
+      content:
+        application/json:
+          schema:
+            $ref: './schemas.yaml#/resParams'
+
+parameters:
+  - name: address
+    in: path
+    description: user address
+    required: true
+    schema:
+      type: string
+      pattern: '^0x[0-9|a-f|A-F]{40}'

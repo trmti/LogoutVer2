@@ -19,3 +19,5 @@ paths:
     $ref: './paths/mintToken/index.yaml'
   /utils/getNFTdatas/${NFTid}:
     $ref: './paths/utils/getNFTdatas/index.yaml'
+  /utils/getWeeklySleeps/${address}:
+    $ref: './paths/utils/getWeeklySleeps/index.yaml'
