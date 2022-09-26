@@ -12,7 +12,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const useraddress = req.query.address;
-  if (req.method === 'GET') {
+  if (req.method === 'GET' && typeof useraddress === 'string') {
     const { data, error }: PostgrestResponse<{ sleeps: sleeptype[] }> =
       await supabase.rpc('get_sleeps', { useraddress });
 
@@ -26,5 +26,7 @@ export default async function handler(
     } else {
       res.status(200).json(data);
     }
+  } else {
+    res.status(400).json({ message: 'Invalid method or parameter' });
   }
 }

@@ -6,7 +6,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const id = req.query.id;
-  if (req.method === 'GET') {
+  if (req.method === 'GET' && typeof id === 'string') {
     if (typeof id === 'string') {
       const results = await Promise.all([
         (async () => {
@@ -28,12 +28,10 @@ export default async function handler(
         })(),
       ]);
       if (results[0] && results[1].length && results[2]) {
-        res
-          .status(200)
-          .json({
-            ...results[2],
-            attributes: { level: results[0], damages: results[1] },
-          });
+        res.status(200).json({
+          ...results[2],
+          attributes: { level: results[0], damages: results[1] },
+        });
         return;
       } else {
         res.status(400).json({ message: 'NFT is not exists' });
@@ -41,5 +39,7 @@ export default async function handler(
       }
     }
     res.status(400).json({ message: 'failed' });
+  } else {
+    res.status(400).json({ message: 'Invalid method or parameter' });
   }
 }

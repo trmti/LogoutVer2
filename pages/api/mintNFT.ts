@@ -28,5 +28,7 @@ export default async function handler(
         res.status(200).json({ NFTid });
       }
     }
+  } else {
+    res.status(400).json({ message: 'Invalid method' });
   }
 }

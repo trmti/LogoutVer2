@@ -1,0 +1,20 @@
+get:
+  description: ユーザーが所有している全てのNFTに関する情報を取得する。
+  summary: get user nfts
+  operationId: getUserNfts
+  responses:
+    200:
+      description: get user's NFTs successfully
+      content:
+        application/json:
+          schema:
+            $ref: './schemas.yaml#/resParams'
+
+parameters:
+  - name: address
+    in: path
+    description: user address
+    required: true
+    schema:
+      type: string
+      pattern: '^0x[0-9|a-f|A-F]{40}'
