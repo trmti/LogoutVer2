@@ -13,12 +13,12 @@ type jsonParams = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<jsonParams[] | { message: string }>
 ) {
   const address = req.query.address;
   if (req.method === 'GET' && typeof address === 'string') {
     const NFTamount = (await nftContract.balanceOf(address)).toNumber();
-    const jsons: Response[] = await Promise.all(
+    const jsons: jsonParams[] = await Promise.all(
       Array.from(Array(NFTamount), (v, k) => k).map(async (i) => {
         const id: number = await nftContract.tokenOfOwnerByIndex(address, i);
         const uri = await nftContract.tokenURI(id);
