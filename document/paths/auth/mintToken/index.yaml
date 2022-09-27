@@ -13,6 +13,10 @@ post:
     400:
       description: You already minted token today.
     401:
-      description: mint transaction failed. Please try again.
+      description: Contract transaction failed. Please try again.
+    402:
+      description: Contract transaction failed. \
+        And revert Server props failed. \
+        Please contact me trmtikko@gmail.com \
     500:
       description: Internal Server Error

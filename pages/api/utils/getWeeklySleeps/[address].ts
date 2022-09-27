@@ -2,20 +2,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '@/utils/supabaseClient';
 import type { PostgrestResponse } from '@supabase/postgrest-js';
 
-type sleeptype = {
-  data: string;
-  duration: number;
-};
-
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<number[] | { message: string }>
 ) {
   const useraddress = req.query.address;
   if (req.method === 'GET' && typeof useraddress === 'string') {
-    const { data, error }: PostgrestResponse<{ sleeps: sleeptype[] }> =
-      await supabase.rpc('get_sleeps', { useraddress });
-
+    const { data, error }: PostgrestResponse<number> = await supabase.rpc(
+      'get_sleeps',
+      { useraddress }
+    );
     if (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
