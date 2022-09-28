@@ -85,6 +85,8 @@ export default async function handler(
           }
         }
       }
+    } else {
+      res.status(401).json({ message: 'Invalid method' });
     }
   } catch (e) {
     console.error(e);

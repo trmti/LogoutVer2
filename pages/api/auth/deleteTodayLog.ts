@@ -11,7 +11,7 @@ export default async function handler(
 ) {
   const { address }: params = req.body;
   try {
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
       const { error } = await supabase.rpc('remove_sleep', {
         useraddress: address,
       });
@@ -20,6 +20,8 @@ export default async function handler(
       } else {
         res.status(400).json({ message: 'delete log failed', error });
       }
+    } else {
+      res.status(401).json({ message: 'Invalid method' });
     }
   } catch (e) {
     res.status(500).json({ message: 'Internal Server Error', e: e.message });
