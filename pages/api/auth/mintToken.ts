@@ -69,7 +69,7 @@ export default async function handler(
           if (fix_flag) {
             res.status(401).json({
               message: 'Contract transaction failed. Please try again.',
-              e: e.message,
+              e: e,
             });
             return;
           } else {
