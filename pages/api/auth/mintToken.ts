@@ -41,6 +41,7 @@ export default async function handler(
               throw new Error();
             }
           } else {
+            console.error('calculate failed');
             res.status(500).json({ message: 'Internal server error' });
             return;
           }
