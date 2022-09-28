@@ -19,15 +19,11 @@ export default async function handler(
       txn = await txn.wait();
       if (txn.status === 1) {
         const NFTid = txn.events[0].args.tokenId.toNumber();
-        const { error } = await supabase
-          .from('nftdatas')
-          .insert([{ tokenid: NFTid }]);
-        if (error) {
-          console.error(error.message);
-          res.status(500).json({ message: 'Internal Server Error' });
-        } else {
-          res.status(200).json({ NFTid });
-        }
+        res.status(200).json({ NFTid });
+      } else {
+        res
+          .status(401)
+          .json({ message: 'mint Transaction failed. please try again.' });
       }
     } else {
       res.status(400).json({ message: 'Invalid method' });
