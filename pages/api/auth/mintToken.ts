@@ -32,20 +32,26 @@ export default async function handler(
         try {
           const vol = await calculateMintVol(NFTid, useraddress);
           if (vol !== false) {
-            let txn = await tokenContract.mint(useraddress, vol);
-            txn = await txn.wait();
-            if (txn.status === 1) {
-              res.status(200).json({
-                message: `mintSuccess! volume: ${vol} * 10e-8 GNT`,
-              });
-              return;
+            if (vol !== BigInt(0)) {
+              let txn = await tokenContract.mint(useraddress, vol);
+              txn = await txn.wait();
+              if (txn.status === 1) {
+                res.status(200).json({
+                  message: `mintSuccess! volume: ${vol} * 10e-18 GNT`,
+                });
+                return;
+              } else {
+                throw new Error('some error in transaction');
+              }
             } else {
-              throw new Error();
+              res.status(201).json({
+                message:
+                  'Too little mint amount. Please record your sleep log tomorrow. ',
+              });
             }
           } else {
             console.error('calculate failed');
-            res.status(500).json({ message: 'Internal server error' });
-            return;
+            throw new Error('calculateMintVol failed.');
           }
         } catch (e) {
           console.error(e);
@@ -63,7 +69,7 @@ export default async function handler(
           if (fix_flag) {
             res.status(401).json({
               message: 'Contract transaction failed. Please try again.',
-              e,
+              e: e.message,
             });
             return;
           } else {
@@ -88,7 +94,7 @@ export default async function handler(
 }
 
 async function calculateMintVol(NFTid: number, useraddress: string) {
-  const GNT_USDC_PRICE = 0.000001;
+  const GNT_USDC_PRICE = 1;
   const MAX_MINT_PRICE = 10;
 
   const [sleeps, level] = await Promise.all([
@@ -105,9 +111,9 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
     })(),
   ]);
   let x;
-  if (sleeps && sleeps.length != 1 && level) {
+  if (sleeps && level) {
     const todaySleep = sleeps.shift();
-    if (sleeps.length != 1) {
+    if (sleeps.length != 0) {
       x =
         mintVolConf[
           Math.floor(
@@ -119,13 +125,16 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
         ][Math.floor((level - 1) / 5)] / 96;
     } else {
       x =
-        mintVolConf[Math.floor(todaySleep / 120)][Math.floor((level - 1) / 5)] /
-        96;
+        mintVolConf[Math.floor(todaySleep < 60 ? 1 : todaySleep / 60) - 1][
+          Math.floor((level - 1) / 5)
+        ] / 96;
     }
     const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
     const max_gamma = (1 / 362880) * 1 ** 9 * Math.E ** 1;
-    const res = Math.floor(
-      (gamma / max_gamma) * (MAX_MINT_PRICE / GNT_USDC_PRICE) * 10 ** 8
+    const res = BigInt(
+      Math.floor(
+        (gamma / max_gamma) * (MAX_MINT_PRICE / GNT_USDC_PRICE) * 10 ** 18
+      )
     );
     return res;
   } else {
