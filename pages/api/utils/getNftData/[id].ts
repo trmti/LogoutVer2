@@ -7,7 +7,7 @@ export default async function handler(
 ) {
   const id = req.query.id;
   if (req.method === 'GET' && typeof id === 'string') {
-    const results = await Promise.all([
+    const [level, damages, metaData] = await Promise.all([
       (async () => {
         return await nftContract.getLevel(id);
       })(),
@@ -26,10 +26,10 @@ export default async function handler(
         }
       })(),
     ]);
-    if (results[0] && results[1].length && results[2]) {
+    if (level && damages.length && metaData) {
       res.status(200).json({
-        ...results[2],
-        attributes: { level: results[0], damages: results[1] },
+        ...metaData,
+        attributes: { level, damages },
       });
       return;
     } else {
