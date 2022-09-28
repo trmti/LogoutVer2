@@ -11,12 +11,14 @@ info:
   version: 1.0.1
 servers:
   - url: https://logout-theta.vercel.app/api/
-    description: this is logout server
+    description: /auth/* のエンドポイントには api_key が必要
 paths:
   /auth/mintNFT:
     $ref: './paths/auth/mintNFT/index.yaml'
   /auth/mintToken:
     $ref: './paths/auth/mintToken/index.yaml'
+  /auth/deleteTodayLog:
+    $ref: './paths/auth/deleteTodayLog/index.yaml'
   /utils/getNftDatas/${NFTid}:
     $ref: './paths/utils/getNftData/index.yaml'
   /utils/getWeeklySleeps/${address}:

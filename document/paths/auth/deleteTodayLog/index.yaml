@@ -1,0 +1,16 @@
+post:
+  description: 最新のsleepLogを削除
+  summary: delete today log
+  operationId: deleteTodayLog
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './schemas.yaml#/reqParam'
+  responses:
+    200:
+      description: delete log success!
+    400:
+      description: delete log failed
+    500:
+      description: Internal Server Error
