@@ -62,6 +62,7 @@ export default async function handler(
             res.status(401).json({
               message: 'Contract transaction failed. Please try again.',
             });
+            return;
           } else {
             res.status(402).json({
               message:
@@ -70,6 +71,7 @@ export default async function handler(
                 Please contact me trmtikko@gmail.com \
                 ',
             });
+            return;
           }
         }
       }
@@ -77,6 +79,7 @@ export default async function handler(
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: 'Internal Server Error' });
+    return;
   }
 }
 
