@@ -31,7 +31,7 @@ export default async function handler(
       } else {
         try {
           const vol = await calculateMintVol(NFTid, useraddress);
-          if (vol) {
+          if (vol !== false) {
             let txn = await tokenContract.mint(useraddress, vol);
             txn = await txn.wait();
             if (txn.status === 1) {
@@ -75,6 +75,7 @@ export default async function handler(
       }
     }
   } catch (e) {
+    console.error(e);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
@@ -102,10 +103,10 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
             sleeps.reduce((pertialSum, a) => pertialSum + a, 0) /
               sleeps.length) /
             120
-        )
+        ) - 1
       ][Math.floor((level - 1) / 5)] / 96;
     const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
-    return Math.floor(gamma * 10 ** 13);
+    return BigInt(Math.floor(gamma * 10 ** 18));
   } else {
     return false;
   }
