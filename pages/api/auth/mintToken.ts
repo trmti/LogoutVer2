@@ -61,6 +61,7 @@ export default async function handler(
           if (fix_flag) {
             res.status(401).json({
               message: 'Contract transaction failed. Please try again.',
+              e,
             });
             return;
           } else {
@@ -70,6 +71,7 @@ export default async function handler(
                 And revert Server props failed. \
                 Please contact me trmtikko@gmail.com \
                 ',
+              e,
             });
             return;
           }
