@@ -88,6 +88,9 @@ export default async function handler(
 }
 
 async function calculateMintVol(NFTid: number, useraddress: string) {
+  const GNT_USDC_PRICE = 0.000001;
+  const MAX_MINT_PRICE = 10;
+
   const [sleeps, level] = await Promise.all([
     (async () => {
       const { data, error } = await supabase.rpc('get_sleeps', { useraddress });
@@ -104,24 +107,27 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
   let x;
   if (sleeps && sleeps.length != 1 && level) {
     const todaySleep = sleeps.shift();
-    x =
-      mintVolConf[
-        Math.floor(
-          (todaySleep +
-            sleeps.reduce((pertialSum, a) => pertialSum + a, 0) /
-              sleeps.length) /
-            120
-        ) - 1
-      ][Math.floor((level - 1) / 5)] / 96;
+    if (sleeps.length != 1) {
+      x =
+        mintVolConf[
+          Math.floor(
+            (todaySleep +
+              sleeps.reduce((pertialSum, a) => pertialSum + a, 0) /
+                sleeps.length) /
+              120
+          ) - 1
+        ][Math.floor((level - 1) / 5)] / 96;
+    } else {
+      x =
+        mintVolConf[Math.floor(todaySleep / 120)][Math.floor((level - 1) / 5)] /
+        96;
+    }
     const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
-    return BigInt(Math.floor(gamma * 10 ** 18));
-  } else if (sleeps && sleeps.length === 1 && level) {
-    const todaySleep = sleeps.shift();
-    x =
-      mintVolConf[Math.floor(todaySleep / 120)][Math.floor((level - 1) / 5)] /
-      96;
-    const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
-    return BigInt(Math.floor(gamma * 10 ** 18));
+    const max_gamma = (1 / 362880) * 1 ** 9 * Math.E ** 1;
+    const res = Math.floor(
+      (gamma / max_gamma) * (MAX_MINT_PRICE / GNT_USDC_PRICE) * 10 ** 8
+    );
+    return res;
   } else {
     return false;
   }
