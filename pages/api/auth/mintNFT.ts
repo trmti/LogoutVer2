@@ -1,5 +1,4 @@
 import { nftContract } from '@/utils/contracts';
-import { supabase } from '@/utils/supabaseClient';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type params = {
