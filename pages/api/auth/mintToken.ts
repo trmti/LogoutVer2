@@ -35,7 +35,9 @@ export default async function handler(
             let txn = await tokenContract.mint(useraddress, vol);
             txn = await txn.wait();
             if (txn.status === 1) {
-              res.status(200).json({ message: 'mintSuccess!' });
+              res.status(200).json({
+                message: `mintSuccess! volume: ${vol} * 10e-8 GNT`,
+              });
               return;
             } else {
               throw new Error();
@@ -99,9 +101,10 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
       return await nftContract.getLevel(NFTid);
     })(),
   ]);
-  if (sleeps && level) {
+  let x;
+  if (sleeps && sleeps.length != 1 && level) {
     const todaySleep = sleeps.shift();
-    const x =
+    x =
       mintVolConf[
         Math.floor(
           (todaySleep +
@@ -110,6 +113,13 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
             120
         ) - 1
       ][Math.floor((level - 1) / 5)] / 96;
+    const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
+    return BigInt(Math.floor(gamma * 10 ** 18));
+  } else if (sleeps && sleeps.length === 1 && level) {
+    const todaySleep = sleeps.shift();
+    x =
+      mintVolConf[Math.floor(todaySleep / 120)][Math.floor((level - 1) / 5)] /
+      96;
     const gamma = (1 / 362880) * x ** 9 * Math.E ** x;
     return BigInt(Math.floor(gamma * 10 ** 18));
   } else {
