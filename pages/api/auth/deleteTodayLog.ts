@@ -24,6 +24,6 @@ export default async function handler(
       res.status(401).json({ message: 'Invalid method' });
     }
   } catch (e) {
-    res.status(500).json({ message: 'Internal Server Error', e: e.message });
+    res.status(500).json({ message: 'Internal Server Error', e });
   }
 }
