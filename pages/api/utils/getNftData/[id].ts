@@ -19,16 +19,19 @@ export default async function handler(
         if (metaDataid.toNumber() === 0) {
           return false;
         } else {
+          // TODO: IPFSのURLを変更、もしくはL2上にデータを保存
           const IPFSdata = await fetch(
-            `https://gateway.pinata.cloud/ipfs/QmconRNpsgPkn5rVeEyLzzuouEpXHRN2kTseSDHiNmCpS1/${metaDataid.toNumber()}.json`
+            `${process.env.IPFS_JSON_URL}/${metaDataid.toNumber()}.json`
           );
           return await IPFSdata.json();
         }
       })(),
     ]);
+    const replacedURL = metaData.image.split('/')[3];
     if (level && damages.length && metaData) {
       res.status(200).json({
         ...metaData,
+        image: `${process.env.IPFS_IMAGE_URL}/${replacedURL}`,
         attributes: { level, damages },
       });
       return;

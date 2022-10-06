@@ -2,6 +2,7 @@ import { tokenContract, nftContract } from '@/utils/contracts';
 import { supabase } from '@/utils/supabaseClient';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import mintVolConf from '@/utils/mintVolConf';
+import { getPrice } from '@/utils/getPrice';
 
 type params = {
   NFTid: number;
@@ -99,9 +100,17 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
   const GNT_USDC_PRICE = 1;
   const MAX_MINT_PRICE = 10;
 
+  // TODO: 本番環境ではGNT_USDC_PRICEを以下のコードで取得。
+  // const price = await getPrice('0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619');
+  // console.log(price);
+
   const [sleeps, level] = await Promise.all([
     (async () => {
-      const { data, error } = await supabase.rpc('get_sleeps', { useraddress });
+      const {
+        data,
+        error,
+      }: { data: false | undefined | number[]; error: any } =
+        await supabase.rpc('get_sleeps', { useraddress });
       if (!error) {
         return data;
       } else {
@@ -116,17 +125,18 @@ async function calculateMintVol(NFTid: number, useraddress: string) {
   if (sleeps && level) {
     const todaySleep = sleeps.shift();
     if (sleeps.length != 0) {
-      x =
-        mintVolConf[
-          Math.floor(
-            (todaySleep +
-              sleeps.reduce((pertialSum, a) => pertialSum + a, 0) /
-                sleeps.length) /
-              120
-          ) - 1
-        ][Math.floor((level - 1) / 5)] / 96;
+      const vol =
+        Math.floor(
+          // @ts-ignore
+          (todaySleep +
+            sleeps.reduce((pertialSum, a) => pertialSum + a, 0) /
+              sleeps.length) /
+            120
+        ) - 1;
+      x = mintVolConf[vol > 0 ? vol : 0][Math.floor((level - 1) / 5)] / 96;
     } else {
       x =
+        // @ts-ignore
         mintVolConf[Math.floor(todaySleep < 60 ? 1 : todaySleep / 60) - 1][
           Math.floor((level - 1) / 5)
         ] / 96;
