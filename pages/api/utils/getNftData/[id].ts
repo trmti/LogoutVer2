@@ -7,32 +7,26 @@ export default async function handler(
 ) {
   const id = req.query.id;
   if (req.method === 'GET' && typeof id === 'string') {
-    const [level, damages, metaData] = await Promise.all([
-      (async () => {
-        return await nftContract.getLevel(id);
-      })(),
-      (async () => {
-        return await nftContract.getDamages(id);
-      })(),
-      (async () => {
-        const metaDataid = await nftContract.getMetaDataid(id);
-        if (metaDataid.toNumber() === 0) {
-          return false;
-        } else {
-          // TODO: IPFSのURLを変更、もしくはL2上にデータを保存
-          const IPFSdata = await fetch(
-            `${process.env.IPFS_JSON_URL}/${metaDataid.toNumber()}.json`
-          );
-          return await IPFSdata.json();
-        }
-      })(),
-    ]);
+    let metaData;
+    const data = await nftContract.getData(Number(id));
+    console.log(data);
+    if (data.metaId) {
+      metaData = await fetch(
+        `${process.env.IPFS_JSON_URL}${Number(data.metaId)}.json`
+      );
+    }
+    metaData = await metaData?.json();
+    console.log(data, metaData);
     const replacedURL = metaData.image.split('/')[3];
-    if (level && damages.length && metaData) {
+    if (data && metaData) {
       res.status(200).json({
         ...metaData,
-        image: `${process.env.IPFS_IMAGE_URL}/${replacedURL}`,
-        attributes: { level, damages },
+        image: `${process.env.IPFS_IMAGE_URL}${replacedURL}`,
+        attributes: {
+          level: data.level,
+          rarity: data.rarity,
+          disabled: data.disabled,
+        },
       });
       return;
     } else {
