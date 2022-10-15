@@ -9,14 +9,12 @@ export default async function handler(
   if (req.method === 'GET' && typeof id === 'string') {
     let metaData;
     const data = await nftContract.getData(Number(id));
-    console.log(data);
     if (data.metaId) {
       metaData = await fetch(
         `${process.env.IPFS_JSON_URL}${Number(data.metaId)}.json`
       );
     }
     metaData = await metaData?.json();
-    console.log(data, metaData);
     const replacedURL = metaData.image.split('/')[3];
     if (data && metaData) {
       res.status(200).json({
