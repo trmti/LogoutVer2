@@ -25,15 +25,7 @@ export default async function handler(
         return await (await fetch(uri)).json();
       })
     );
-    const response = jsons.map((json) => {
-      return {
-        ...json,
-        image: `https://gateway.pinata.cloud/ipfs/QmfJRL2J4MobfLF8587SLx1SkfvHEUzqtfryCX7vWDZfHe/${
-          json.image.split('/')[3]
-        }`,
-      };
-    });
-    res.status(200).json(response);
+    res.status(200).json(jsons);
   } else {
     res.status(400).json({ message: 'Invalid method or parameter' });
   }
