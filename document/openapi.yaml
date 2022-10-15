@@ -19,7 +19,7 @@ paths:
     $ref: './paths/auth/mintToken/index.yaml'
   /auth/deleteTodayLog:
     $ref: './paths/auth/deleteTodayLog/index.yaml'
-  /utils/getNftDatas/${NFTid}:
+  /utils/getNftData/${NFTid}:
     $ref: './paths/utils/getNftData/index.yaml'
   /utils/getWeeklySleeps/${address}:
     $ref: './paths/utils/getWeeklySleeps/index.yaml'
